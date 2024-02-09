@@ -3,9 +3,9 @@
 # Declare variables to be passed into your templates.
 
 env:
-  community: ""
-  nr_account_id: ""
-  nr_api_key: ""
+  community: "public"
+  nr_account_id: "3428733"
+  nr_api_key: "2f4845ae6b2c2126bd8b88c2a0a4178bfa2cNRAL"
 
 replicaCount: 1
 

@@ -1,0 +1,109 @@
+version: "3.9"
+services:
+  ktranslate-1:
+    image: kentik/ktranslate:v2
+    # user: "${UID}:${GID}"
+    ports:
+      - target: 1620
+        protocol: udp
+    environment:
+      - NEW_RELIC_API_KEY=$NEW_RELIC_API_KEY
+      - NR_LOG_LEVEL=$NR_LOG_LEVEL
+      - NR_REGION=$NR_REGION
+      - NR_ACCOUNT_ID=$NR_ACCOUNT_ID
+    command:
+      - --metalisten=0.0.0.0:8083
+      - --snmp=/data/snmp-1.yml
+      - -metrics=jchf
+      - -tee_logs=true
+      - --snmp_discovery_on_start=true
+      - --snmp_discovery_min=1
+      - --log_level=$NR_LOG_LEVEL
+      - nr1.snmp
+    restart: always
+    volumes:
+      - ${PWD}/snmp-1.yaml:/data/snmp-1.yml:rw
+      - ${PWD}/entry.sh:/entry.sh
+    entrypoint: /entry.sh
+    secrets:
+      - NEW_RELIC_API_KEY
+      - NR_LOG_LEVEL
+      - NR_REGION
+      - NR_ACCOUNT_ID
+  ktranslate-2:
+    image: kentik/ktranslate:v2
+    # user: "${UID}:${GID}"
+    ports:
+      - target: 1620
+        protocol: udp
+    command:
+      - --metalisten=0.0.0.0:8083
+      - --snmp=/data/snmp-2.yml
+      - -metrics=jchf
+      - -tee_logs=true
+      - --snmp_discovery_on_start=true
+      - --snmp_discovery_min=1
+      - --log_level=$NR_LOG_LEVEL
+      - nr1.snmp
+    restart: always
+    volumes:
+      - ${PWD}/snmp-2.yaml:/data/snmp-2.yml:rw
+      - ${PWD}/entry.sh:/entry.sh
+    entrypoint: /entry.sh
+    secrets:
+      - NEW_RELIC_API_KEY
+      - NR_LOG_LEVEL
+      - NR_REGION
+      - NR_ACCOUNT_ID
+  ktranslate-3:
+    image: kentik/ktranslate:v2
+    # user: "${UID}:${GID}"
+    ports:
+      - target: 1620
+        protocol: udp
+    command:
+      - --metalisten=0.0.0.0:8083
+      - --snmp=/data/snmp-3.yml
+      - -metrics=jchf
+      - -tee_logs=true
+      - --snmp_discovery_on_start=true
+      - --snmp_discovery_min=1
+      - --log_level=$NR_LOG_LEVEL
+      - nr1.snmp
+    restart: always
+    volumes:
+      - ${PWD}/snmp-3.yaml:/data/snmp-3.yml:rw
+      - ${PWD}/entry.sh:/entry.sh
+    entrypoint: /entry.sh
+    secrets:
+      - source: NEW_RELIC_API_KEY
+        target: NEW_RELIC_API_KEY
+        mode: 700
+      - source: NR_LOG_LEVEL
+        target: NR_LOG_LEVEL
+        mode: 700
+      - source: NR_REGION
+        target: NR_REGION
+        mode: 700
+      - source: NR_ACCOUNT_ID
+        target: NR_ACCOUNT_ID
+        mode: 700
+  nginx:
+    build: ./nginx
+    ports:
+      - "162:162/udp"
+    depends_on:
+      - ktranslate-1
+      - ktranslate-2
+      - ktranslate-3
+    volumes:
+      - ${PWD}/nginx/nginx.conf:/etc/nginx/nginx.conf:rw
+secrets:
+  NEW_RELIC_API_KEY: 
+    environment: NEW_RELIC_API_KEY
+  NR_LOG_LEVEL: 
+    environment: NR_LOG_LEVEL
+  NR_REGION: 
+    environment: NR_REGION
+  NR_ACCOUNT_ID: 
+    environment: NR_ACCOUNT_ID

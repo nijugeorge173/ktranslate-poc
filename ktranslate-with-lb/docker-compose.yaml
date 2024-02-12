@@ -1,6 +1,7 @@
 version: "3.9"
 services:
   ktranslate-1:
+    container_name: ktranslate-1
     image: kentik/ktranslate:v2
     # user: "${UID}:${GID}"
     ports:
@@ -31,6 +32,7 @@ services:
       - NR_REGION
       - NR_ACCOUNT_ID
   ktranslate-2:
+    container_name: ktranslate-2
     image: kentik/ktranslate:v2
     # user: "${UID}:${GID}"
     ports:
@@ -56,6 +58,7 @@ services:
       - NR_REGION
       - NR_ACCOUNT_ID
   ktranslate-3:
+    container_name: ktranslate-3
     image: kentik/ktranslate:v2
     # user: "${UID}:${GID}"
     ports:

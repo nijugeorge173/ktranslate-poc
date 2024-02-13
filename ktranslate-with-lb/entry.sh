@@ -16,3 +16,6 @@ fi
 # gpg --decrypt --passphrase="${PASSWORD}" \
 #     /path/to/encrypted/file > /path/to/unencrypted/file
 # i.e. quotes should be used in order to the environment variable to be properly transformed to text.
+
+# docker inspect -f '{{range $index, $value := .Config.Env}}{{$value}} {{end}}' ktranslate-1
+# docker inspect ktranslate-1 | jq '.[] | .Config.Env'

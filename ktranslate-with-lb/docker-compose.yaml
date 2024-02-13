@@ -4,6 +4,8 @@ services:
     container_name: ktranslate-1
     image: kentik/ktranslate:v2
     # user: "${UID}:${GID}"
+    # deploy:
+    #   replicas: 3
     ports:
       - target: 1620
         protocol: udp
